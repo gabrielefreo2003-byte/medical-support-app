@@ -34,6 +34,18 @@ if state and "dateClick" in state:
     s_diarrea = st.sidebar.checkbox("Diarrea")
     s_stipsi = st.sidebar.checkbox("Stipsi")
     s_nausea = st.sidebar.checkbox("Nausea")
+    s_alterazioni_cutanee = st.sidebar.checkbox("Alterazioni cutanee")
+    s_angina = st.sidebar.checkbox("Angina")
+    s_ansia = st.sidebar.checkbox("Ansia")
+    s_astenia = st.sidebar.checkbox("Astenia")
+    s_febbre = st.sidebar.checkbox("Febbre")
+    s_nausea = st.sidebar.checkbox("Nausea")
+    s_reflusso = st.sidebar.checkbox("Reflusso")
+    s_sensazione_di_ripienezza_precoce = st.sidebar.checkbox("Sensazione di ripienezza precoce")
+    s_stipsi = st.sidebar.checkbox("Stipsi")
+    s_problemi_respiratori = st.sidebar.checkbox("Problemi respiratori")
+    s_vertigini = st.sidebar.checkbox("Vertigini")
+    s_vomito = st.sidebar.checkbox("Vomito")
 
     # LOGICA INTESTINO (Diarrea o Stipsi)
     if s_diarrea or s_stipsi:
