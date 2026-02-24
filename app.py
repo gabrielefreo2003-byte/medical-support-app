@@ -41,7 +41,6 @@ if state and "dateClick" in state:
     s_nausea = st.sidebar.checkbox("Nausea")
     s_reflusso = st.sidebar.checkbox("Reflusso")
     s_sensazione_di_ripienezza_precoce = st.sidebar.checkbox("Sensazione di ripienezza precoce")
-    s_stipsi = st.sidebar.checkbox("Stipsi")
     s_problemi_respiratori = st.sidebar.checkbox("Problemi respiratori")
     s_vertigini = st.sidebar.checkbox("Vertigini")
     s_vomito = st.sidebar.checkbox("Vomito")
