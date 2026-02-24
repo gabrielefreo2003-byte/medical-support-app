@@ -33,7 +33,6 @@ if state and "dateClick" in state:
     s_schiena = st.sidebar.checkbox("Mal di Schiena")
     s_diarrea = st.sidebar.checkbox("Diarrea")
     s_stipsi = st.sidebar.checkbox("Stipsi")
-    s_nausea = st.sidebar.checkbox("Nausea")
     s_alterazioni_cutanee = st.sidebar.checkbox("Alterazioni cutanee")
     s_angina = st.sidebar.checkbox("Angina")
     s_ansia = st.sidebar.checkbox("Ansia")
