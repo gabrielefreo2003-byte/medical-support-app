@@ -6,6 +6,7 @@ import os
 # Importiamo i moduli sintomi
 from sintomi.schiena import visualizza_schiena, calcola_responso_schiena
 from sintomi.intestino import visualizza_intestino, calcola_responso_intestino # <--- Nuova Importazione
+from sintomi.orticaria import visualizza_orticaria, calcola_responso_orticaria
 
 st.set_page_config(page_title="Supporto Medico v1", layout="wide")
 
@@ -30,17 +31,19 @@ if state and "dateClick" in state:
     
     # Gestione sintomi multipli con checkbox
     st.sidebar.write("Quali sintomi hai oggi?")
+    s_allergie = st.sidebar.checkbox("Allergie")
     s_alterazioni_cutanee = st.sidebar.checkbox("Alterazioni cutanee")
     s_angina = st.sidebar.checkbox("Angina")
     s_ansia = st.sidebar.checkbox("Ansia")
     s_astenia = st.sidebar.checkbox("Astenia")
     s_diarrea = st.sidebar.checkbox("Diarrea")
     s_febbre = st.sidebar.checkbox("Febbre")
-    s_schiena = st.sidebar.checkbox("Mal di Schiena")
     s_nausea = st.sidebar.checkbox("Nausea")
+    s_orticaria = st.sidebar.checkbox("Orticaria spontanea acuta")
     s_problemi_respiratori = st.sidebar.checkbox("Problemi respiratori")
     s_reflusso = st.sidebar.checkbox("Reflusso")
-    s_sensazione_di_ripienezza_precoce = st.sidebar.checkbox("Sensazione di ripienezza precoce")
+    s_ripienezza = st.sidebar.checkbox("Sensazione di ripienezza precoce")
+    s_schiena = st.sidebar.checkbox("Mal di Schiena")
     s_stipsi = st.sidebar.checkbox("Stipsi")
     s_vertigini = st.sidebar.checkbox("Vertigini")
     s_vomito = st.sidebar.checkbox("Vomito")
@@ -65,15 +68,36 @@ if state and "dateClick" in state:
                 st.session_state.ultimo_risultato = (consiglio, risultato["punteggio"], urgenza)
                 st.success("Dati intestinali salvati!")
 
+    # LOGICA ORTICARIA
+    if s_orticaria:
+        with st.sidebar.form("form_orticaria"):
+            risultato_o = visualizza_orticaria()
+            if st.form_submit_button("ANALIZZA ORTICARIA"):
+                consiglio, urgenza = calcola_responso_orticaria(
+                    risultato_o["punteggio_diag"], 
+                    risultato_o["uas_score"], 
+                    risultato_o["anafilassi"]
+                )
+
+                dati_finali = risultato_o["dati"]
+                dati_finali["Data"] = data_selezionata
+                dati_finali["Urgenza"] = urgenza
+
+                salva_su_excel(dati_finali)
+                st.session_state.ultimo_risultato = (consiglio, urgenza)
+                st.success("Dati orticaria salvati!")
+
     # LOGICA SCHIENA (pre-esistente)
     if s_schiena:
         with st.sidebar.form("form_schiena"):
             risultato_s = visualizza_schiena()
             if st.form_submit_button("ANALIZZA SCHIENA"):
                 consiglio, urgenza = calcola_responso_schiena(risultato_s["punteggio"])
+                
                 dati_finali = risultato_s["dati"]
                 dati_finali["Data"] = data_selezionata
                 dati_finali["Urgenza"] = urgenza
+                
                 salva_su_excel(dati_finali)
                 st.session_state.ultimo_risultato = (consiglio, risultato_s["punteggio"], urgenza)
                 st.success("Dati schiena salvati!")
