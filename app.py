@@ -4,9 +4,10 @@ import pandas as pd
 import os
 
 # Importiamo i moduli sintomi
-from sintomi.schiena import visualizza_schiena, calcola_responso_schiena
-from sintomi.intestino import visualizza_intestino, calcola_responso_intestino # <--- Nuova Importazione
+from sintomi.allergia import visualizza_allergia, calcola_responso_allergia
+from sintomi.intestino import visualizza_intestino, calcola_responso_intestino
 from sintomi.orticaria import visualizza_orticaria, calcola_responso_orticaria
+from sintomi.schiena import visualizza_schiena, calcola_responso_schiena
 
 st.set_page_config(page_title="Supporto Medico v1", layout="wide")
 
@@ -31,7 +32,7 @@ if state and "dateClick" in state:
     
     # Gestione sintomi multipli con checkbox
     st.sidebar.write("Quali sintomi hai oggi?")
-    s_allergie = st.sidebar.checkbox("Allergie")
+    s_allergia = st.sidebar.checkbox("Allergia")
     s_alterazioni_cutanee = st.sidebar.checkbox("Alterazioni cutanee")
     s_angina = st.sidebar.checkbox("Angina")
     s_ansia = st.sidebar.checkbox("Ansia")
@@ -47,6 +48,21 @@ if state and "dateClick" in state:
     s_stipsi = st.sidebar.checkbox("Stipsi")
     s_vertigini = st.sidebar.checkbox("Vertigini")
     s_vomito = st.sidebar.checkbox("Vomito")
+
+    # LOGICA ALLERGIA
+    if s_allergia:
+        with st.sidebar.form("form_allergia"):
+            res_a = visualizza_allergia()
+            if st.form_submit_button("ANALIZZA ALLERGIA"):
+                consiglio, urgenza = calcola_responso_allergia(res_a["punteggio"], res_a["alert"], res_a["interpretazione"])
+
+                # Salviamo 3 valori
+                st.session_state.ultimo_risultato = (consiglio, res_a["punteggio"], urgenza)
+
+                dati_finali = res_a["dati"]
+                dati_finali["Data"] = data_selezionata
+                salva_su_excel(dati_finali)
+                st.success("Dati allergia salvati!")
 
     # LOGICA INTESTINO (Diarrea o Stipsi)
     if s_diarrea or s_stipsi:
