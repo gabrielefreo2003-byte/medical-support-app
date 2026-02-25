@@ -71,20 +71,16 @@ if state and "dateClick" in state:
     # LOGICA ORTICARIA
     if s_orticaria:
         with st.sidebar.form("form_orticaria"):
-            risultato_o = visualizza_orticaria()
+            risultato_s = visualizza_orticaria()
             if st.form_submit_button("ANALIZZA ORTICARIA"):
-                consiglio, urgenza = calcola_responso_orticaria(
-                    risultato_o["punteggio_diag"], 
-                    risultato_o["uas_score"], 
-                    risultato_o["anafilassi"]
-                )
-
-                dati_finali = risultato_o["dati"]
+                consiglio, urgenza = calcola_responso_orticaria(risultato_s["punteggio"], risultato_s["uas"], risultato_s["alert"])
+                
+                # Salviamo sempre 3 valori per coerenza: (Messaggio, Punteggio, Urgenza)
+                st.session_state.ultimo_risultato = (consiglio, risultato_s["punteggio"], urgenza)
+                
+                dati_finali = risultato_s["dati"]
                 dati_finali["Data"] = data_selezionata
-                dati_finali["Urgenza"] = urgenza
-
                 salva_su_excel(dati_finali)
-                st.session_state.ultimo_risultato = (consiglio, urgenza)
                 st.success("Dati orticaria salvati!")
 
     # LOGICA SCHIENA (pre-esistente)
@@ -102,9 +98,10 @@ if state and "dateClick" in state:
                 st.session_state.ultimo_risultato = (consiglio, risultato_s["punteggio"], urgenza)
                 st.success("Dati schiena salvati!")
 
-    if 'ultimo_risultato' in st.session_state:
-        res, pts, urg = st.session_state.ultimo_risultato
-        st.info(f"**Esito:** {res} | **Urgenza:** {urg}")
+    # CORREZIONE ERRORE VISUALIZZAZIONE
+if 'ultimo_risultato' in st.session_state:
+    res, pts, urg = st.session_state.ultimo_risultato # Ora riceve sempre 3 valori
+    st.info(f"**Esito:** {res} | **Score:** {pts} | **Urgenza:** {urg}")
 
 else:
     st.info("Seleziona un giorno sul calendario.")
